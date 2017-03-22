@@ -57,7 +57,9 @@ Route::post('/login', 'Login\LoginController@verificaCredenciales')->name('login
 Route::get('password/email', 'Login\ClaveController@index');
 Route::post('password/email', 'Login\ClaveController@postEmail');
 
+//rutas de la ventana de reseteo
 Route::get('password/reset', 'Login\ClaveController@reset');
+Route::post('password/reset', 'Login\ClaveController@passwordReset');
 
 
 route::get('/logout', 'Login\LoginController@logout')->name('logout');
@@ -74,6 +76,13 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('welcome');
 });
+
+
+
+Route::get( '/enviocorreo',function (){
+
+    return view('Login.mensajes.envio_correo');
+} );
 
 
 

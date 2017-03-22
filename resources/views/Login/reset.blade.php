@@ -11,12 +11,14 @@
                         {!! csrf_field() !!}
 
                         <input type="hidden" name="token" value="{{ $request->token }}">
+                        <input type="hidden" name="idempresa" value="{{ $request->idempresa }}">
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label class="col-md-4 control-label">Correo electrónico</label>
 
                             <div class="col-md-6">
-                                <input type="email" class="form-control" name="email" value="{{ $request->email or old('email') }}">
+                                <label class="col-md-4 control-label">{{ $request->email  }}</label>
+                                <input type="hidden" class="form-control" name="email" value="{{ $request->email or old('email') }}" >
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">

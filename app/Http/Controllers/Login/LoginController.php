@@ -82,6 +82,9 @@ class LoginController extends Controller
 
                 $_SESSION['usuario'] = $usuarios[0]->nombre;
 
+                $this->manejaCookieLogin( $request );
+
+
                 return Redirect::to('/');
 
 
@@ -115,6 +118,38 @@ class LoginController extends Controller
         session_destroy();
 
         return Redirect::to('/login');
+
+    }
+
+
+    public function manejaCookieLogin( Request $request )
+    {
+
+        if( isset(  $request->remember ) )
+        {
+
+            if( $request->remember == 'on' )
+            {
+                setcookie("email", $request->email);
+                setcookie("psw_pedidos", $request->psw_pedidos);
+                setcookie("remember", 'checked');
+            }
+
+        }else{
+
+            if( isset( $_COOKIE['email'] ) )
+            {
+
+                setcookie("email", "");
+                setcookie("psw_pedidos", "");
+                setcookie("remember", '');
+
+            }
+
+        }
+
+       // dd($request);
+
 
     }
 

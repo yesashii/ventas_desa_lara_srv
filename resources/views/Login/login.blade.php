@@ -41,7 +41,7 @@
                                     <label class="col-md-4 control-label">Correo electrónico</label>
 
                                     <div class="col-md-6">
-                                        <input type="email" class="form-control" name="email" value="{{ old('email') }}">
+                                        <input type="email" class="form-control" name="email" value="{{ isset($_COOKIE["email"])? $_COOKIE["email"] : '' }}">
 
                                         @if( count($errors) > 0 )
                                             @foreach( $errors->all() as $error )
@@ -59,7 +59,9 @@
                                 <label class="col-md-4 control-label">Contraseña</label>
 
                                 <div class="col-md-6">
-                                    <input type="password" class="form-control" name="psw_pedidos">
+                                    <input type="password" class="form-control"
+                                           name="psw_pedidos"
+                                           value="{{ isset($_COOKIE["psw_pedidos"])? $_COOKIE["psw_pedidos"] : '' }}">
 
                                     @if ($errors->has('psw_pedidos'))
                                         <span class="help-block">
@@ -73,7 +75,9 @@
                                 <div class="col-md-6 col-md-offset-4">
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" name="remember"> Recordarme
+                                            <input type="checkbox" name="remember"
+                                                   {{ isset($_COOKIE["remember"])? $_COOKIE["remember"] : '' }}
+                                            > Recordar en este equipo
                                         </label>
                                     </div>
                                 </div>
