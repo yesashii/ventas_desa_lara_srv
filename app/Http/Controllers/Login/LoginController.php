@@ -17,43 +17,15 @@ class LoginController extends Controller
     /**
      * inicializa el logeo.
      *
-     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
 
     {
-        $empresas = Dim_empresas::whereIn('idempresa',[1,3,4])->get() ;
-
         return view('Login.login',[
-            'empresas' => $empresas,
+            'empresas' => Dim_empresas::traeEmpresas(),
         ]);
     }
-
-
-    /**
-     * verifica si existe el correo en la base de datos
-     *
-     * @param $mail
-     * @return bool
-     */
-    public function verificaMail( $mail )
-    {
-
-        $resultado = Dim_vendedores::where('email', '=', $mail )
-            ->where('sw_vigente', '=', 'S' )
-            ->where('email', '<>', '' )
-            ->get();
-
-        if( isset( $resultado[0] ) )
-        {
-            return true;
-        }else{
-            return false;
-        }
-
-    }
-
 
     /**
      * Verifica si existe usuario y contraseña, si es así, redirige dentro del sitio
@@ -65,22 +37,18 @@ class LoginController extends Controller
     public function verificaCredenciales( Request $request )
 
     {
-        $mailValido = $this->verificaMail( $request->email );
+        $mailValido = Dim_vendedores::verificaMail( $request->email );
+
 
         if( $mailValido )
         {
 
-            $usuarios = Dim_vendedores::where('email', '=', $request->email)
-                ->Where('idempresa', '=', $request->idempresa)
-                ->Where('psw_pedidos', '=', $request->psw_pedidos)
-                ->get();
-
-
-            if( isset( $usuarios[0] ) )
+            if( Dim_vendedores::existeVendedor( $request->email, $request->idempresa, $request->psw_pedidos ) )
             {
+                $vendedor = Dim_vendedores::traeVendedor($request->email, $request->idempresa );
                 session_start();
 
-                $_SESSION['usuario'] = $usuarios[0]->nombre;
+                $_SESSION['usuario'] = $vendedor->nombre;
 
                 $this->manejaCookieLogin( $request );
 
@@ -147,9 +115,6 @@ class LoginController extends Controller
             }
 
         }
-
-       // dd($request);
-
 
     }
 
