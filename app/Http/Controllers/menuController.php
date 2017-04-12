@@ -12,6 +12,14 @@ use Carbon\Carbon;
 
 class menuController extends Controller
 {
+
+
+    /**
+     * Devuelve la lista con las fechas que llenan el combo box
+     *
+     *
+     * @return array
+     */
     private function traeListaFechas()
     {
         $fechas = [];
@@ -37,19 +45,24 @@ class menuController extends Controller
 
         }
 
-        return $fechas;
+        return array_reverse($fechas);
 
     }
 
 
+    /**
+     * carga la ventana principal del estado de pedidos
+     *
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function estadoPedidos()
     {
 
-        dd( $this->traeListaFechas() );
+        $fechas = $this->traeListaFechas();
 
 
-
-        return view('estadoPedidos.index', compact('fecha'));
+        return view('estadoPedidos.index', compact('fechas'));
     }
 
 

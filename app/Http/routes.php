@@ -6,7 +6,8 @@
 /*****************************/
 
 // rutas de logeo
-Route::get('/login', 'Login\LoginController@index')->name('login');
+Route::get('/login', 'Login\LoginController@index')->name('login')->name('login');
+Route::get('/auth/login', 'Login\LoginController@index')->name('login')->name('login');
 Route::post('/login', 'Login\LoginController@verificaCredenciales')->name('login');
 
 // rutas de reseteo de contraseña
@@ -22,33 +23,37 @@ route::get('/logout', 'Login\LoginController@logout')->name('logout');
 
 /*******************************/
 
-
-
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/home', function () {
-    return view('welcome');
-});
-
-
-
 Route::get( '/enviocorreo',function (){
 
     return view('Login.mensajes.envio_correo');
 } );
 
 
-/*
-|--------------------------------------------------------------------------
-| MENU
-|--------------------------------------------------------------------------
-|
-*/
+Route::group(['middleware' => 'auth'], function(){
 
-Route::get('/estadopedidos', 'menuController@estadoPedidos')->name('estadopedidos');
+
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+    Route::get('/home', function () {
+        return view('welcome');
+    })->name('home');
+
+    /*
+    |--------------------------------------------------------------------------
+    | PEDIDOS
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/estadopedidos/{fecha}', 'pedido\pedidoController@estadoPedidos')->name('estadopedidos');
+    Route::get('/estadopedidos', 'pedido\pedidoController@estadoPedidos')->name('estadopedidos');
+    Route::post('/estadopedidos', 'pedido\pedidoController@buscarPorFecha')->name('estadopedidos');
+
+    //buscaNota
+    Route::get('/buscanota/{pedido}', 'pedido\pedidoController@buscaNota')->name('buscanota');
+
+});
+
 
 
 

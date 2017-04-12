@@ -48,7 +48,10 @@ class LoginController extends Controller
                 $vendedor = Dim_vendedores::traeVendedor($request->email, $request->idempresa );
                 session_start();
 
-                $_SESSION['usuario'] = $vendedor->nombre;
+                $_SESSION['usuario']    = $vendedor->nombre;
+                $_SESSION['idempresa']  = $vendedor->idempresa;
+                $_SESSION['idvendedor'] = $vendedor->idvendedor;
+                $_SESSION['email']      = $vendedor->email;
 
                 $this->manejaCookieLogin( $request );
 

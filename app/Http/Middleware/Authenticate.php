@@ -34,12 +34,11 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->guest()) {
-            if ($request->ajax()) {
-                return response('Unauthorized.', 401);
-            } else {
-                return redirect()->guest('auth/login');
-            }
+        //dd($request);
+        session_start();
+        if ( !isset($_SESSION['email']) )
+        {
+          return redirect()->guest('login');
         }
 
         return $next($request);
