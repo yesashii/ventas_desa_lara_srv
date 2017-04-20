@@ -1,27 +1,4 @@
-<?php
-    function aux_estados( $estado )
-    {
-        switch ($estado) {
-            case 'I':
-                $estado = 'No procesado';
-                break;
-            case 'P':
-                $estado = 'En proceso';
-                break;
-            case 'F':
-                $estado = 'Facturado';
-                break;
-            case 'R':
-                $estado = 'Rechazado';
-                break;
-            case 'N ':
-                $estado = 'Nulo';
-                break;
-        }
-        return $estado;
-
-    }
-?>
+@include('funciones.traduce')
 @extends('layouts.app')
 
 @section('content')
@@ -108,7 +85,31 @@
                                         <td>{{ $pedido->Sigla   }}</td>
                                         <td>{{ $pedido->RazonSocial   }}</td>
                                         <td>{{ aux_estados( $pedido->sw_estado )   }}</td>
-                                        <td>{{ is_null( $pedido->factura_sap )? $pedido->factura_desa: $pedido->factura_sap }}</td>
+
+                                        <td>
+                                            @if( $pedido->factura_desa or $pedido->factura_sap )
+
+                                                @if( \App\Modelos\sap\Pedidos_s::compruebaFacturaEnSap($pedido->factura_sap)  )
+
+                                                    <a href="{{ url('buscafactura').'/'.traduceFactura( $pedido ).'/'.$pedido->idempresa }}"
+                                                       data-toggle="tooltip"
+                                                       title="{{'Ver factura'}}">
+                                                        {{ traduceFactura( $pedido ) }}
+                                                        <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
+                                                    </a>
+
+                                                @else
+
+                                                    <a data-toggle="tooltip"
+                                                       title="{{'Factura en Proceso de traspaso'}}">
+                                                        {{ traduceFactura( $pedido ) }}
+                                                    </a>
+
+                                                @endif
+
+                                            @endif
+                                        </td>
+
                                         <td>{{ $pedido->pedido_externo   }}</td>
                                         <td>{{ 'Despacho '   }}<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> </td>
                                     </tr>
@@ -142,7 +143,7 @@
         <div class="row col-lg-12" >
             <div class="panel panel-default">
                 <!-- Default panel contents -->
-                <div class="panel-heading">Pedidos Por Call Center</div>
+                <div class="panel-heading">Pedidos Por Call Center <span class="badge">{{ count($pedidos_call) }}</span></div>
 
                 @if( count( $pedidos_call ) > 0 )
                     <div class="panel-body">

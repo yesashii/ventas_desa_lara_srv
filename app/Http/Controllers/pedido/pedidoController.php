@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Modelos\raw\Pedidos_r;
+use App\Modelos\raw\Pedidos_r;// sqlServer
+use App\Modelos\sap\Pedidos_s;// SAP
 use App\Modelos\Dim_vendedores;
 
 use Carbon\Carbon;
@@ -143,6 +144,12 @@ class pedidoController extends Controller
         return $yyyy.$mm.$dd;
     }
 
+    /**
+     * Accion que se ejecuta cuando se da a buscar la fecha.
+     *
+     * @param $numpedido
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function buscaNota( $numpedido )
     {
 
@@ -174,6 +181,43 @@ class pedidoController extends Controller
             'errorestipodispo',
             'observaciones'));
 
+    }
+
+
+    public function buscaFactura( $numfactura, $idempresa )
+    {
+
+        $numfacturaFormat   =  $this->formateaNumFactura( $numfactura );
+        $desa_docenc_sap    = Pedidos_s::traeEncabezadoDocumentoSapDesa($numfacturaFormat);
+
+        $pedidos            = Pedidos_s::traeGrillaFacturaSap( $desa_docenc_sap->CORRELATIVO );
+
+        //dd($pedidos);
+
+        //dd($desa_docenc_sap);
+
+        return view('estadoPedidos.verFactura', compact( 'numfacturaFormat','desa_docenc_sap', 'pedidos' ));
+
+    }
+
+
+    /**
+     * Le agrega los ceros faltantes al numero de factura
+     *
+     * @param $numfactura
+     * @return string
+     */
+    private function formateaNumFactura( $numfactura )
+    {
+        $largoDoc = strlen($numfactura);
+
+        while ( $largoDoc < 10 )
+        {
+            $numfactura = '0'.$numfactura;
+            $largoDoc = strlen($numfactura);
+        }
+
+        return $numfactura;
     }
 
 

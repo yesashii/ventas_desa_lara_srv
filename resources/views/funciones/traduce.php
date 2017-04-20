@@ -107,3 +107,19 @@ function traduceMensajeError( $clienteaux )
     return $arr_errores;
 
 }
+
+function traduceFactura( $pedido )
+{
+    return is_null( $pedido->factura_sap )? $pedido->factura_desa: $pedido->factura_sap;
+}
+
+
+function traduceFechaSap( $fecha )
+{
+    $anio = substr($fecha, -29,4 );
+    $mes  = substr($fecha, -24,2 );
+    $dia  = substr($fecha, -21,2 );
+    $n_fecha = $dia.'-'.$mes.'-'.$anio;
+
+    return $n_fecha;
+}

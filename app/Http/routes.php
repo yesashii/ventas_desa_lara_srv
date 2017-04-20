@@ -52,6 +52,17 @@ Route::group(['middleware' => 'auth'], function(){
     //buscaNota
     Route::get('/buscanota/{pedido}', 'pedido\pedidoController@buscaNota')->name('buscanota');
 
+    //factura - link en pedido
+    Route::get('/buscafactura/{numfactura}/{idempresa}', 'pedido\pedidoController@buscaFactura')->name('buscafactura');
+
+
+    //prueba_sap
+    Route::get('sapsql', function(){
+
+        dd( App\Modelos\sap\pedidos_s::prueba() );
+
+    });
+
 });
 
 

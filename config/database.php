@@ -46,6 +46,20 @@ return [
 
     'connections' => [
 
+
+
+        'hana' => [
+            'driver'   => 'sqlsrv',
+            'host'     => env('DB_HOST', 'localhost'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset'  => 'utf8',
+            'prefix'   => '',
+        ],
+
+
+
         'sqlite' => [
             'driver'   => 'sqlite',
             'database' => database_path('database.sqlite'),
